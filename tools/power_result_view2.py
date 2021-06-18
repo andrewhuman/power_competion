@@ -14,14 +14,20 @@ from PIL import Image
 from PIL import ImageEnhance
 from PIL import ImageChops
 
+#官方3_testa_user.csv 测试集图片名字、顺序。
 test_json = '/data2/competion/tian_dianwang/3_testa_user.csv'
+# 包含测试图片3_test_imagesa文件夹的路径。即tian_dianwang文件夹里要有3_test_imagesa这个文件夹
+path = "/data2/competion/tian_dianwang"
+#图片可视化后结果保存路径
+new_path = "/data2/competion/tian_dianwang/3_test_imagesa_result_v5"
+#提交结果保存路径
+results_json_path = "/data2/competion/tian_dianwang/PaddleDetection/results_v5_1.json"
 
 df = pd.read_csv(test_json,header=0)
 df = df["image_url"]
 print(df[0])
 
-path = "/data2/competion/tian_dianwang"
-new_path = "/data2/competion/tian_dianwang/3_test_imagesa_result_cascade_paddle"
+
 if not os.path.exists(new_path):
     os.makedirs(new_path)
     
@@ -32,8 +38,7 @@ dict_lable = {
   
 }
 
-#提交结果保存路径
-results_json_path = "/data2/competion/tian_dianwang/PaddleDetection/results_cascade_paddle.json"
+
 
 json_04 = pd.read_json(results_json_path)
 #返回唯一图片名字
@@ -60,6 +65,7 @@ for ids,one_json_id in enumerate(json_id):
             # print(ids,img_name,print(num_json))
             
             bbox = one_farme["bbox"]
+            score = one_farme["score"]
             # print(js["category_id"])
             # bbox = np.array(bbox[0])
             # print(bbox)
@@ -72,11 +78,13 @@ for ids,one_json_id in enumerate(json_id):
                 cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
             elif one_farme["category_id"] == 2:
                 cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
+                cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
             elif one_farme["category_id"] == 3:
                 cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,0,255),2)
-            cv2.putText(img,category_id,((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
+                cv2.putText(img,category_id +" " +str(score),((int(x1+100),int(y1+100))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
             
-        if ids < 10:
+            
+        if ids < 100:
             cv2.imwrite(os.path.join(new_path,str(ids) + " " + img_name.split("/")[-1]),img)
         else:
             break
@@ -93,6 +101,7 @@ for ids,one_json_id in enumerate(json_id):
         # print(js["category_id"])
         # print(bbox.iloc[0])
         bbox = bbox.iloc[0]
+        score = one_farme["score"].iloc[0]
         
         # print(os.path.join(path,img_name))
         x1 = bbox[0]
@@ -103,13 +112,15 @@ for ids,one_json_id in enumerate(json_id):
             cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
         elif one_farme["category_id"].iloc[0] == 2:
             cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
+            cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
         elif one_farme["category_id"].iloc[0] == 3:
             cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,0,255),2)
-        cv2.putText(img,category_id,((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
+            cv2.putText(img,category_id +" " +str(score),((int(x1+100),int(y1+100))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
+        #cv2.putText(img,category_id,((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
         # cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
         #cv2.putText(img,"rectangle",(100,100),cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),1)
         
-        if ids < 10:
+        if ids < 100:
             cv2.imwrite(os.path.join(new_path,str(ids) + " " + img_name.split("/")[-1]),img)
         else:
             break
