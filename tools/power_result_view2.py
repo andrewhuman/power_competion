@@ -1,6 +1,5 @@
 #导入需要用到的模块
-import paddle
-import paddle.nn as nn
+
 import pandas as pd
 import numpy as np
 import random
@@ -19,9 +18,9 @@ test_json = '/data2/competion/tian_dianwang/3_testa_user.csv'
 # 包含测试图片3_test_imagesa文件夹的路径。即tian_dianwang文件夹里要有3_test_imagesa这个文件夹
 path = "/data2/competion/tian_dianwang"
 #图片可视化后结果保存路径
-new_path = "/data2/competion/tian_dianwang/3_test_imagesa_result_v5"
+new_path = "/data2/competion/tian_dianwang/3_test_imagesa_results_v4_th05"
 #提交结果保存路径
-results_json_path = "/data2/competion/tian_dianwang/PaddleDetection/results_v5_1.json"
+results_json_path = "/data2/competion/tian_dianwang/power_competion/results_v4_th05.json"
 
 df = pd.read_csv(test_json,header=0)
 df = df["image_url"]
@@ -76,6 +75,7 @@ for ids,one_json_id in enumerate(json_id):
             y2 = bbox[3]
             if one_farme["category_id"] == 1:
                 cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
+                cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
             elif one_farme["category_id"] == 2:
                 cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
                 cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
@@ -84,7 +84,7 @@ for ids,one_json_id in enumerate(json_id):
                 cv2.putText(img,category_id +" " +str(score),((int(x1+100),int(y1+100))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
             
             
-        if ids < 100:
+        if ids < 1000:
             cv2.imwrite(os.path.join(new_path,str(ids) + " " + img_name.split("/")[-1]),img)
         else:
             break
@@ -110,6 +110,7 @@ for ids,one_json_id in enumerate(json_id):
         y2 = bbox[3]
         if one_farme["category_id"].iloc[0] == 1:
             cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
+            cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
         elif one_farme["category_id"].iloc[0] == 2:
             cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
             cv2.putText(img,category_id +" " +str(score),((int(x1),int(y1))),cv2.FONT_HERSHEY_PLAIN,4,(0,0,255),4)
@@ -120,7 +121,7 @@ for ids,one_json_id in enumerate(json_id):
         # cv2.rectangle(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),2)
         #cv2.putText(img,"rectangle",(100,100),cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),1)
         
-        if ids < 100:
+        if ids < 1000:
             cv2.imwrite(os.path.join(new_path,str(ids) + " " + img_name.split("/")[-1]),img)
         else:
             break

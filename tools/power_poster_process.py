@@ -61,13 +61,13 @@ train_lable = {
 }
 
 #测试结果，txt保存路径
-path = "/data2/competion/tian_dianwang/PaddleDetection/testA_results"
+path = "/data2/competion/ScaledYOLOv4/inference/output"
 #测试集图片名字、顺序。官方3_testa_user.csv
 test_json = '/data2/competion/tian_dianwang/3_testa_user.csv'
 #测试集预测结果保存路径
 #test_path = '/data2/competion/tian_dianwang/PaddleDetection/output'
 #提交结果保存路径
-results_json_path = "results_v5_1.json"
+results_json_path = "results_v4_th05.json"
 
 df = pd.read_csv(test_json,header=0)
 df = df["image_url"]
