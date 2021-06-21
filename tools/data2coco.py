@@ -41,12 +41,15 @@ for img_id, one_img in enumerate(df_img_mark):
     # print(one_img)
     # print(one_img["items"])
     one_img_name = df_img_path[img_id]
-    img = Image.open(os.path.join("/data2/competion/tian_dianwang/",one_img_name))
+    img = cv2.imread(os.path.join("/data2/competion/tian_dianwang/",one_img_name))
+    #img = Image.open(os.path.join("/data2/competion/tian_dianwang/",one_img_name))
     ids = ids + 1
-    w, h = img.size
+    #w, h = #img.size
+    h,w,c = img.shape
     image_width += w
     image_height += h
     # print(one_img_name)
+    num_json_before = len(data_dict_json)
     
     for one_mark in one_img:
         # print(one_mark)
@@ -68,8 +71,14 @@ for img_id, one_img in enumerate(df_img_mark):
         one_dict["category"] = category
         one_dict["bbox"] = bbox
         data_dict_json.append(one_dict)
+    num_json_after = len(data_dict_json)
+    if num_json_after <= num_json_before:
+        print('warning img label empty  = {}'.format(one_img_name))
+print('image num = {}'.format(ids))
 print(image_height/ids,image_width/ids)
 print(dict_class)
+#{'badge': 673, 'offground': 2478, 'ground': 2223, 'safebelt': 1725}
+#len = 7099
 print(len(data_dict_json))
 print(data_dict_json[0])
 with open("mydata/data.json", 'w') as fp:

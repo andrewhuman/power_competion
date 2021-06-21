@@ -61,13 +61,13 @@ train_lable = {
 }
 
 #测试结果，txt保存路径
-path = "/data2/competion/ScaledYOLOv4/inference/output"
+path = "/data2/competion/under_water/mmdetection_512/mmdetection/result_txt04_iou04"
 #测试集图片名字、顺序。官方3_testa_user.csv
 test_json = '/data2/competion/tian_dianwang/3_testa_user.csv'
 #测试集预测结果保存路径
 #test_path = '/data2/competion/tian_dianwang/PaddleDetection/output'
 #提交结果保存路径
-results_json_path = "results_v4_th05.json"
+results_json_path = "results_detectors_1x__sync04_iou04_0702.json"
 
 df = pd.read_csv(test_json,header=0)
 df = df["image_url"]
@@ -79,8 +79,8 @@ for id_s,one_img_name in enumerate(df):
     one_img_name = one_img_name.split("/")[-1].split(".")[0] + ".txt"
     # one_img_path = "/home/aistudio/PaddleDetection/e26c8adc_cb88_4af2_918a_1a0275d39ced.txt"
     one_img_path = os.path.join(path,one_img_name)
-    print('\n\n\n')
-    print(one_img_name)
+    #print('\n\n\n')
+    #print(one_img_name)
 
     try:#防止空文件,空文件情况直接跳过
         one_txt = pd.read_csv(one_img_path,header=None)
@@ -90,7 +90,7 @@ for id_s,one_img_name in enumerate(df):
         print('warning: empty =',one_img_path)
         continue
     one_txt = one_txt[0]
-    print('one_txt = {}'.format(one_txt))
+    #print('one_txt = {}'.format(one_txt))
     #将2、3两类取出来，即先判断是否是人（天上的加上地上的）
     offground, ground = [], []#人
     badge, safebelt = [], []#物体
@@ -114,68 +114,68 @@ for id_s,one_img_name in enumerate(df):
 
     #print(offground)
     #print('ground = {}'.format(ground))
-    print('offground = {}'.format(offground))
-    print('badge = {}'.format(badge))
-    print('safebelt = {}'.format(safebelt))
-    
+    #print('offground = {}'.format(offground))
+    #print('badge = {}'.format(badge))
+    #print('safebelt = {}'.format(safebelt))
+    num_results_before = len(results)
     #判断是否为天上的人
     if len(offground) != 0:
         for off in offground:
             offgroundperson = True#表示为离地的人,也就是第三类,不是作业人员也不是监督人员
-            print('len(offground) != 0 offgroundperson =True')
+            #print('len(offground) != 0 offgroundperson =True')
             #判断是否有勋章
             if len(badge) != 0:
                 for bad in badge:
-                    my_iou = badge_iou(off[0:4],bad[0:4])
+                    my_iou = badge_iou(off[0:4],bad[0:4],p=0.7)
                     # print(my_iou)
                     offgroundperson = 1 - my_iou
-                    print('badge : offgroundperson ={} my_iou ={} '.format(offgroundperson,my_iou))
+                    #print('badge : offgroundperson ={} my_iou ={} '.format(offgroundperson,my_iou))
                     if my_iou:
                         result = {}
                         result["image_id"] = id_s
                         result["category_id"] = 1
                         result["bbox"] = [off[0],off[1],off[2],off[3]]
                         result["score"] = float(off[4])
-                        print('badge = {}'.format(result))
+                        #print('badge = {}'.format(result))
                         results.append(result)
 
             #判断是否有穿安全带
             if len(safebelt) != 0:
                 for safe in safebelt:
-                    my_iou = safebelt_iou(off[0:4],safe[0:4])
+                    my_iou = safebelt_iou(off[0:4],safe[0:4],p=0.2)
                     # print(my_iou)
                     offgroundperson = 1 - my_iou
-                    print('safebelt : offgroundperson ={} my_iou ={} '.format(offgroundperson,my_iou))
+                    #print('safebelt : offgroundperson ={} my_iou ={} '.format(offgroundperson,my_iou))
                     if my_iou:
                         result = {}
                         result["image_id"] = id_s
                         result["category_id"] = 2
                         result["bbox"] = [off[0],off[1],off[2],off[3]]
                         result["score"] = float(off[4])
-                        print('safebelt = {}'.format(result))
+                        #print('safebelt = {}'.format(result))
                         results.append(result)
             #
-            print('after : offgroundperson ={}  '.format(offgroundperson))     
+            #print('after : offgroundperson ={}  '.format(offgroundperson))     
             result = {}
             result["image_id"] = id_s
             result["category_id"] = 3
             result["bbox"] = [off[0],off[1],off[2],off[3]]
             result["score"] = float(off[4])
-            print('offgroundperson = {}'.format(result))
+            #print('offgroundperson = {}'.format(result))
             results.append(result)            
             #if offgroundperson:
                 
     #print('results = {}'.format(results))
     #判断是否为地上的人
     #路人是不提交结果的
-    print('ground = {}'.format(ground))
+    #print('ground = {}'.format(ground))
     if len(ground) != 0:
         for gro in ground:
 
             #判断是否有勋章
             if len(badge) != 0:
                 for bad in badge:
-                    my_iou = badge_iou(gro[0:4],bad[0:4])
+                    my_iou = badge_iou(gro[0:4],bad[0:4], p= 0.7)
                     #print(my_iou)
                     if my_iou:
                         result = {}
@@ -187,7 +187,7 @@ for id_s,one_img_name in enumerate(df):
             #判断是否有穿安全带
             if len(safebelt) != 0:
                 for safe in safebelt:
-                    my_iou = safebelt_iou(gro[0:4],safe[0:4])
+                    my_iou = safebelt_iou(gro[0:4],safe[0:4], p=0.2)
                     # print(my_iou)
                     if my_iou:
                         result = {}
@@ -196,6 +196,16 @@ for id_s,one_img_name in enumerate(df):
                         result["bbox"] = [gro[0],gro[1],gro[2],gro[3]]
                         result["score"] = float(gro[4])
                         results.append(result)
+    num_results_after = len(results)
+    if num_results_after <= num_results_before:
+        print('\n')
+        print('warning img label empty  = {}'.format(one_img_name))
+        print('offground = {}'.format(offground))
+        print('ground = {}'.format(ground))
+        print('badge = {}'.format(badge))
+        print('safebelt = {}'.format(safebelt))
 
+        
+    
 print(len(results))
 json.dump(results,open(results_json_path,'w'),indent=4) 

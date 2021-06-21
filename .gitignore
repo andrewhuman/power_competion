@@ -14,7 +14,8 @@ dist/
 downloads/
 mmdetection_615/
 mmdetection/
-#ScaledYOLOv4/
+ScaledYOLOv4/
+coco/
 eggs/
 .eggs/
 lib/

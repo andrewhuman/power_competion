@@ -50,12 +50,13 @@ class Fabric2COCO:
         print(list_val)
         
         
-        if self.is_mode == "train":
-            anno_result = anno_result.iloc[list_train]
-            #anno_result = anno_result.head(int(anno_result['name'].count()*0.8)+1)#取数据集前百分之90
-        elif self.is_mode == "val":
-            anno_result = anno_result.iloc[list_val]
-            #anno_result = anno_result.tail(int(anno_result['name'].count()*0.2)+1) 
+        
+        #if self.is_mode == "train":
+            #anno_result = anno_result.iloc[list_train]
+            ##anno_result = anno_result.head(int(anno_result['name'].count()*0.8)+1)#取数据集前百分之90
+        #elif self.is_mode == "val":
+            #anno_result = anno_result.iloc[list_val]
+            ##anno_result = anno_result.tail(int(anno_result['name'].count()*0.2)+1) 
         name_list=anno_result["name"].unique()#返回唯一图片名字
         for img_name in name_list:
             img_anno = anno_result[anno_result["name"] == img_name]#取出此图片的所有标注
@@ -145,20 +146,20 @@ class Fabric2COCO:
 #
 '''转换为coco格式'''
 #训练集,划分90%做为训练集
-img_dir = "/data2/competion/tian_dianwang/mydata/"
+img_dir = "/data2/competion/tian_dianwang/"
 anno_dir="/data2/competion/tian_dianwang/mydata/data.json"
 fabric2coco = Fabric2COCO()
 train_instance = fabric2coco.to_coco(anno_dir,img_dir)
 if not os.path.exists("/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"):
     os.makedirs("/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/")
-fabric2coco.save_coco_json(train_instance, "/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"+'instances_{}_2.json'.format("train"))
+fabric2coco.save_coco_json(train_instance, "/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"+'instances_{}_all.json'.format("train"))
 
 '''转换为coco格式'''
 #验证集，划分10%做为验证集
-img_dir = "/data2/competion/tian_dianwang/mydata/"
+img_dir = "/data2/competion/tian_dianwang/"
 anno_dir="/data2/competion/tian_dianwang/mydata/data.json"
 fabric2coco = Fabric2COCO(is_mode = "val")
 train_instance = fabric2coco.to_coco(anno_dir,img_dir)
 if not os.path.exists("/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"):
     os.makedirs("/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/")
-fabric2coco.save_coco_json(train_instance, "/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"+'instances_{}_2.json'.format("val"))
+fabric2coco.save_coco_json(train_instance, "/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/"+'instances_{}_all.json'.format("val"))

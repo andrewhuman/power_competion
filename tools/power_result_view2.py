@@ -24,7 +24,7 @@ results_json_path = "/data2/competion/tian_dianwang/power_competion/results_v4_t
 
 df = pd.read_csv(test_json,header=0)
 df = df["image_url"]
-print(df[0])
+print('df num = {}'.format(len(df)))
 
 
 if not os.path.exists(new_path):
@@ -42,15 +42,19 @@ dict_lable = {
 json_04 = pd.read_json(results_json_path)
 #返回唯一图片名字
 json_id = json_04['image_id'].unique()
+
+print('json_id num = {}'.format(len(json_id)))
 for ids,one_json_id in enumerate(json_id):
     #取出一张图片的全部框
     num_json = json_04[json_04['image_id']==one_json_id]
     
     img_name = df[one_json_id]
-    print(img_name)
+    #print(img_name)
     img = cv2.imread(os.path.join(path,img_name),1)
-    print('num_json = ')
-    print(num_json)    
+    #print('num_json = ')
+    #print(num_json)
+    if len(num_json) <=0:
+        print('warning img predict label empty  = {}'.format(img_name))
 
     if len(num_json) > 1:
         
