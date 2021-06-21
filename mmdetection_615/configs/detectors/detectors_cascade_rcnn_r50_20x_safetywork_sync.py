@@ -217,7 +217,7 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type='SafetyWork',
-        ann_file='/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/instances_train_all.json',
+        ann_file='../annotations/instances_train_all.json',
         img_prefix='/home/hyshuai/competion/3_images_orientation_rgb/',
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -250,7 +250,7 @@ data = dict(
         ]),
     val=dict(
         type='SafetyWork',
-        ann_file='/data2/competion/tian_dianwang/PaddleDetection/dataset/coco/annotations/instances_val_5.json',
+        ann_file='../coco/annotations/instances_val_5.json',
         img_prefix='/home/hyshuai/competion/3_images_orientation_rgb/',
         pipeline=[
             dict(type='LoadImageFromFile'),
