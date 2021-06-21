@@ -12,10 +12,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-#ssmmdetection_615/
-mmdetection/
-ScaledYOLOv4/
-coco/
 eggs/
 .eggs/
 lib/
