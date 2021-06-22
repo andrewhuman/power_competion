@@ -209,6 +209,8 @@ def main():
         outputs = multi_gpu_test(model, data_loader, args.tmpdir,
                                  args.gpu_collect)
     class_name = ['1','2','3','4']
+    if not os.path.exists('./result_txt'):
+        os.mkdir('./result_txt')
     for images_info, result in zip(dataset.data_infos, outputs):
         img_index = images_info['filename'][:-4]
         txt_path = os.path.join('./result_txt/' , img_index)

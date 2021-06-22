@@ -250,7 +250,7 @@ data = dict(
         ]),
     val=dict(
         type='SafetyWork',
-        ann_file='../coco/annotations/instances_val_5.json',
+        ann_file='../annotations/instances_val_5.json',
         img_prefix='/home/hyshuai/competion/3_images_orientation_rgb/',
         pipeline=[
             dict(type='LoadImageFromFile'),
